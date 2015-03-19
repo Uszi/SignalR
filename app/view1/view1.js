@@ -9,6 +9,17 @@ angular.module('myApp.view1', ['ngRoute'])
   });
 }])
 
-.controller('View1Ctrl', [function() {
-
+.controller('View1Ctrl', ['$scope', 'Hub', 'signalRHubProxy', function($scope, Hub, signalRHubProxy) {
+	var clientPushHubProxy = signalRHubProxy(signalRHubProxy.defaultServer, 'clientPushHub', { logging: true });
+    var serverTimeHubProxy = signalRHubProxy(signalRHubProxy.defaultServer, 'serverTimeHub');
+    console.log(clientPushHubProxy);
+    clientPushHubProxy.on('serverTime', function (data) {
+       	console.log("SignalR time", data);
+    });
+    $scope.get = function(){
+    	console.log("get");
+	    serverTimeHubProxy.invoke('getServerTime', function (data) {
+	           console.log(data);
+	        });
+	};
 }]);
