@@ -15,7 +15,7 @@ config(['$routeProvider', function($routeProvider) {
     function signalRHubProxyFactory(serverUrl, hubName, startOptions) {
         var connection = $.hubConnection(signalRServer);
         var proxy = connection.createHubProxy(hubName);
-        connection.start(startOptions).done(function (res) { console.log("connection done", res); }).fail(function(res){console.log(res);})
+        connection.start(startOptions).done(function (res) { console.log("connection done", res); }).fail(function(res){console.log(res);});
         return {
             on: function (eventName, callback) {
                 proxy.on(eventName, function (result) {

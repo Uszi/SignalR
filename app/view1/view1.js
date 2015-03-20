@@ -9,17 +9,16 @@ angular.module('myApp.view1', ['ngRoute'])
   });
 }])
 
-.controller('View1Ctrl', ['$scope', 'Hub', 'signalRHubProxy', function($scope, Hub, signalRHubProxy) {
-	var clientPushHubProxy = signalRHubProxy(signalRHubProxy.defaultServer, 'clientPushHub', { logging: true });
-    var serverTimeHubProxy = signalRHubProxy(signalRHubProxy.defaultServer, 'serverTimeHub');
-    console.log(clientPushHubProxy);
-    clientPushHubProxy.on('serverTime', function (data) {
-       	console.log("SignalR time", data);
-    });
-    $scope.get = function(){
-    	console.log("get");
-	    serverTimeHubProxy.invoke('getServerTime', function (data) {
-	           console.log(data);
-	        });
-	};
+.controller('View1Ctrl', ['$scope', '$rootScope', 'Hub', 'signalRHubProxy', function($scope, $rootScope, Hub, signalRHubProxy) {
+	var hub = new Hub('ChatHub', {
+		listeners: {
+			'addNewMessageToPage': function(data, obj){
+				$rootScope.$apply(function () {
+					$scope.color = obj;
+				})
+				
+			}
+		},
+		rootPath: 'http://signalr-uszo.azurewebsites.net/signalr'
+	});
 }]);
